@@ -29,6 +29,7 @@ section .data
 	minutes: dq 0
 	_seconds: dq 0
 	character db 0
+	nanosec dq 0,7000
 section .text
 _start:
 	
@@ -55,6 +56,7 @@ random_num:
 	pop r13
 	mov r12,[digits]
 	mov rbx,0
+	mov r15d,9
 	run:
 		mov rax,96
 		mov rdi,temp3
@@ -63,7 +65,6 @@ random_num:
 		syscall	
 		mov eax,[temp4]
 		xor rdx,rdx
-		mov r15d,9
 		div r15d
 		;add dl,48
 		cmp rbx,0
@@ -73,6 +74,11 @@ random_num:
 		mov rdi,r13
 		mov [rdi+rbx],dl
 		inc rbx
+		mov r15d,10
+		mov rax,35
+		mov rdi,nanosec
+		mov rsi,0
+		syscall
 		dec r12
 		jnz run
 		
@@ -175,6 +181,7 @@ str_to_num:
 game:
 	xor rax,rax
 	mov [count_wrong],rax
+	xor rax,rax
 	mov [count_correct],rax
 	mov rsi,str1
 	mov rbx,25
